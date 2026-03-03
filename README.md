@@ -1,2 +1,6 @@
-# ECE-331-Honors
-Verilog vs. C Performance for Matrix Multiplication on an FPGA and ARM CPU
+# Verilog vs. C Performance for Matrix Multiplication on an FPGA and ARM CPU
+
+This project benchmarks a 3x3 Matrix Multiplication across two distinct paradigms within a Zynq-7000 SoC environment:Software Execution (C): Running on the ARM Cortex-A9 Processor.Hardware Acceleration (Verilog): Implemented on the FPGA fabric using Xilinx Vivado.
+Theoretical Performance AnalysisThe performance gap between Hardware Description Languages (HDL) and traditional Software (C) is driven by fundamental architectural differences:Parallelism vs. Sequentiality: C-based execution relies on nested for loops, processing each element of the matrix sequentially. Conversely, the Verilog implementation utilizes a dedicated arithmetic pipeline that performs all required multiplications and additions simultaneously within a single clock cycle.Instruction Overhead: The ARM processor requires cycles for instruction fetching, decoding, and memory management. The FPGA implementation eliminates this overhead by mapping the algorithm directly into physical logic gates and registers.Data Path Optimization: Verilog allows for custom bit-width optimization and direct data-path routing, minimizing the latency typically introduced by the CPU's general-purpose ALU and system bus.
+Hardware Demonstration on BlackboardThe performance disparity is visualized using the Blackboard's onboard hardware peripherals:FeatureSoftware Implementation (C)Hardware Implementation (Verilog)Execution PathARM Cortex-A9 Instruction PipelineFPGA Look-Up Tables (LUTs) & DSP SlicesTimingVariable (Cache/OS dependent)Deterministic (Cycle-accurate)Visual OutputSlow-toggle LED (Instruction-bound)
+
