@@ -1,6 +1,144 @@
-# Verilog vs. C Performance for Matrix Multiplication on an FPGA and ARM CPU
+# Verilog vs. C Performance for Matrix Multiplication on Zynq-7000 SoC
 
-This project benchmarks a 3x3 Matrix Multiplication across two distinct paradigms within a Zynq-7000 SoC environment:Software Execution (C): Running on the ARM Cortex-A9 Processor.Hardware Acceleration (Verilog): Implemented on the FPGA fabric using Xilinx Vivado.
-Theoretical Performance AnalysisThe performance gap between Hardware Description Languages (HDL) and traditional Software (C) is driven by fundamental architectural differences:Parallelism vs. Sequentiality: C-based execution relies on nested for loops, processing each element of the matrix sequentially. Conversely, the Verilog implementation utilizes a dedicated arithmetic pipeline that performs all required multiplications and additions simultaneously within a single clock cycle.Instruction Overhead: The ARM processor requires cycles for instruction fetching, decoding, and memory management. The FPGA implementation eliminates this overhead by mapping the algorithm directly into physical logic gates and registers.Data Path Optimization: Verilog allows for custom bit-width optimization and direct data-path routing, minimizing the latency typically introduced by the CPU's general-purpose ALU and system bus.
-Hardware Demonstration on BlackboardThe performance disparity is visualized using the Blackboard's onboard hardware peripherals:FeatureSoftware Implementation (C)Hardware Implementation (Verilog)Execution PathARM Cortex-A9 Instruction PipelineFPGA Look-Up Tables (LUTs) & DSP SlicesTimingVariable (Cache/OS dependent)Deterministic (Cycle-accurate)Visual OutputSlow-toggle LED (Instruction-bound)
+This project presents a comparative performance study of **3×3 matrix multiplication** implemented in two paradigms within a Xilinx Zynq-7000 SoC platform:
 
+- **Software Execution (C)**: Running on the ARM Cortex-A9 processor
+- **Hardware Acceleration (Verilog)**: Implemented on FPGA fabric using Xilinx Vivado
+
+The goal is to demonstrate the architectural differences between sequential CPU execution and parallel hardware acceleration, and how these differences impact performance, latency, and determinism.
+
+---
+
+## Overview
+
+Matrix multiplication is a fundamental operation in signal processing, embedded systems, and machine learning. This project evaluates how the same algorithm behaves when executed:
+
+- as a **software program** on a general-purpose processor
+- as a **custom hardware datapath** synthesized into FPGA logic
+
+By mapping the algorithm directly into hardware, the design highlights the advantages of **parallel computation**, **deterministic timing**, and **custom data path optimization**.
+
+---
+
+## System Architecture
+
+### Software Implementation (C)
+
+- Executed on **ARM Cortex-A9**
+- Uses standard nested loops for matrix multiplication
+- Sequential computation of each matrix element
+- Subject to:
+  - instruction pipeline latency
+  - memory access overhead
+  - cache and OS variability
+
+---
+
+### Hardware Implementation (Verilog)
+
+- Synthesized into FPGA fabric (LUTs + DSP slices)
+- Fully parallel computation structure
+- Implements:
+  - dedicated multipliers
+  - parallel adders
+  - pipelined datapath
+
+- Executes matrix multiplication in a **cycle-accurate and deterministic manner**
+
+---
+
+## Key Design Concepts
+
+### 1. Parallelism vs. Sequential Execution
+
+- **C Implementation**
+  - Relies on nested `for` loops
+  - Processes elements sequentially
+  - Time complexity reflected in runtime
+
+- **Verilog Implementation**
+  - All multiplications and additions can occur simultaneously
+  - Exploits spatial parallelism in FPGA fabric
+  - Achieves significantly reduced latency
+
+---
+
+### 2. Instruction Overhead
+
+- **CPU (C)**
+  - Requires instruction fetch, decode, execute cycles
+  - Involves control flow and memory management overhead
+
+- **FPGA (Verilog)**
+  - No instruction execution
+  - Algorithm is mapped directly to hardware
+  - Eliminates control overhead
+
+---
+
+### 3. Data Path Optimization
+
+- **Software**
+  - Uses general-purpose ALU
+  - Fixed architecture and data width
+
+- **Hardware**
+  - Custom datapath design
+  - Optimized bit-width and routing
+  - Reduced latency through direct connections
+
+---
+
+## Performance Comparison
+
+| Feature                  | Software (C)                          | Hardware (Verilog)                    |
+|-------------------------|--------------------------------------|--------------------------------------|
+| Execution Platform      | ARM Cortex-A9                        | FPGA Fabric (LUTs & DSP Slices)      |
+| Execution Model         | Sequential                           | Parallel                             |
+| Timing Behavior         | Variable (cache/OS dependent)        | Deterministic (cycle-accurate)       |
+| Latency                 | Higher                               | Lower                                |
+| Throughput              | Limited by CPU                       | High (parallel execution)            |
+| Control Overhead        | High                                 | Minimal                              |
+
+---
+
+## Hardware Demonstration
+
+The performance difference is demonstrated using on-board peripherals:
+
+- **Software (C)**:
+  - LED toggling controlled by CPU execution
+  - Slower and variable due to instruction latency
+
+- **Hardware (Verilog)**:
+  - LED toggling driven directly by FPGA logic
+  - Faster and consistent, reflecting deterministic timing
+
+---
+
+## Tools & Platform
+
+- **Hardware Platform**: Xilinx Zynq-7000 SoC
+- **FPGA Design**: Xilinx Vivado
+- **Software Development**: C (ARM Cortex-A9)
+- **Target Board**: Blackboard / Zynq development board
+
+---
+
+## Key Takeaways
+
+- Hardware acceleration provides **significant performance gains** for compute-intensive tasks
+- FPGA-based designs enable **true parallel execution**
+- Deterministic timing in hardware is critical for real-time systems
+- Software offers flexibility, but hardware offers efficiency
+
+---
+
+## Applications
+
+- Embedded signal processing
+- Real-time systems
+- Hardware acceleration for AI/ML workloads
+- FPGA-based co-design systems (HW/SW partitioning)
+
+---
